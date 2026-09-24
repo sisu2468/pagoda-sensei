@@ -39,6 +39,7 @@ from typing import Any
 from fastapi import APIRouter, HTTPException, status
 from fastapi.responses import JSONResponse
 
+from app.models.intake import destinations_for_sensei
 from app.routes.itinerary_route import CreateItineraryRequest
 from app.routes.tour_match_route import get_tour_engine
 from app.services.itinerary_writer import create_itinerary_with_jobs
@@ -73,22 +74,7 @@ def _fetch_job(job_id: str, *, include_payload: bool = False) -> dict | None:
 
 
 def _derive_destinations(request: CreateItineraryRequest) -> list[str]:
-    destinations: list[str] = []
-    seen: set[str] = set()
-    for stay in request.destinationStays:
-        city = stay.city.strip()
-        if city and city not in seen:
-            destinations.append(city)
-            seen.add(city)
-    if not destinations:
-        if request.primaryDestination:
-            destinations.append(request.primaryDestination)
-            seen.add(request.primaryDestination)
-        for d in request.additionalDestinations:
-            if d not in seen:
-                destinations.append(d)
-                seen.add(d)
-    return destinations
+    return destinations_for_sensei(request)
 
 
 def _build_intake_dict(request: CreateItineraryRequest) -> dict[str, Any]:
@@ -109,6 +95,7 @@ def _build_intake_dict(request: CreateItineraryRequest) -> dict[str, Any]:
         "primaryDestination": request.primaryDestination,
         "importantDestinations": request.importantDestinations,
         "destinationStays": destination_stays_dicts,
+        "interestDestinations": request.interestDestinations,
         "openToRecommendations": request.openToRecommendations,
         "additionalDestinations": request.additionalDestinations,
         "travelerTypes": request.travelerTypes,
@@ -129,6 +116,10 @@ def _build_intake_dict(request: CreateItineraryRequest) -> dict[str, Any]:
         "topPriorities": request.topPriorities,
         "mustHaveExperiences": request.mustHaveExperiences,
         "additionalNotes": request.additionalNotes,
+        "flightDetails": request.flightDetails,
+        "preferredSuppliers": [
+            p.model_dump() for p in request.preferredSuppliers
+        ],
     }
     return {k: v for k, v in raw.items() if v is not None and v != "" and v != []}
 

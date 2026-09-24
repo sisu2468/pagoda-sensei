@@ -267,28 +267,8 @@ def create_itinerary_with_jobs(
                 })
                 continue
 
-            # ----------------------------------------------------------
-            # 2a. Verify guide_tour_assignments exists for this tour_id
-            # ----------------------------------------------------------
-            asgn_resp = (
-                client.table("guide_tour_assignments")
-                .select("tour_id")
-                .eq("tour_id", tour_id)
-                .limit(1)
-                .execute()
-            )
-            if not asgn_resp.data:
-                logger.warning(
-                    "Day %d: tour_id=%d has no guide_tour_assignments — skipping",
-                    day_num, tour_id,
-                )
-                jobs_skipped += 1
-                skip_reasons.append({
-                    "tour_id": tour_id,
-                    "day": day_num,
-                    "reason": "no guide_tour_assignment found — tour cannot be assigned to a guide",
-                })
-                continue
+            # Published tours may have no guide allocated yet — still writable.
+            # Assignment is ops, not a gate.
 
             # ----------------------------------------------------------
             # 2b. Fetch real tour fields from the tour table

@@ -16,8 +16,9 @@ import logging
 from typing import Any
 
 from fastapi import APIRouter, HTTPException, status
-from pydantic import BaseModel, Field
+from pydantic import Field
 
+from app.models.intake import SenseiIntake, destinations_for_sensei
 from app.routes.tour_match_route import get_tour_engine
 from app.services.itinerary_writer import create_itinerary_with_jobs
 
@@ -25,23 +26,7 @@ logger = logging.getLogger(__name__)
 router = APIRouter()
 
 
-# ---------------------------------------------------------------------------
-# Sub-models matching ItineraryIntakeData from lib/itinerary-intake.ts
-# ---------------------------------------------------------------------------
-
-class DestinationStay(BaseModel):
-    """One stop in the ordered city stay plan. Mirrors TS DestinationStay."""
-    city: str
-    nights: int = 0
-    hotelName: str | None = None
-
-
-# ---------------------------------------------------------------------------
-# Request model
-# ---------------------------------------------------------------------------
-
-class CreateItineraryRequest(BaseModel):
-    # ------ Itinerary ownership (not in ItineraryIntakeData) ------
+class CreateItineraryRequest(SenseiIntake):
     user_id: str = Field(..., description="UUID of the advisor (users.id)")
     profile_id: str = Field(
         ...,
@@ -51,53 +36,6 @@ class CreateItineraryRequest(BaseModel):
         ),
     )
     name: str = Field(..., description="Human-readable itinerary name")
-
-    # ------ Trip dates (not in ItineraryIntakeData — kept as top-level) ------
-    arrival_date: str = Field(..., description="YYYY-MM-DD")
-    departure_date: str = Field(..., description="YYYY-MM-DD")
-
-    # ------ Client / traveler info (ItineraryIntakeData fields) ------
-    advisorName: str | None = None
-    clientFullName: str | None = None
-    clientEmail: str | None = None
-    clientWhatsApp: str | None = None
-    totalTravelers: int | None = None
-    adults: int | None = None
-    children: int | None = None
-    infants: int | None = None
-
-    # ------ Destination plan ------
-    primaryDestination: str | None = None
-    importantDestinations: str | None = None
-    destinationStays: list[DestinationStay] = Field(default_factory=list)
-    openToRecommendations: str | None = None
-    additionalDestinations: list[str] = Field(default_factory=list)
-
-    # ------ Preferences ------
-    travelerTypes: list[str] = Field(default_factory=list)
-    estimatedBudget: str | None = None
-    travelStyles: list[str] = Field(default_factory=list)
-    tripPace: str | None = None
-    activityLevel: str | None = None
-
-    # ------ Destination-specific experience selections ------
-    japanExperiences: list[str] = Field(default_factory=list)
-    thailandExperiences: list[str] = Field(default_factory=list)
-    vietnamExperiences: list[str] = Field(default_factory=list)
-    cambodiaExperiences: list[str] = Field(default_factory=list)
-    southKoreaExperiences: list[str] = Field(default_factory=list)
-    chinaExperiences: list[str] = Field(default_factory=list)
-    taiwanExperiences: list[str] = Field(default_factory=list)
-
-    # ------ Trip style / logistics ------
-    tourStyles: list[str] = Field(default_factory=list)
-    transportationPreferences: list[str] = Field(default_factory=list)
-    experiencesToAvoid: list[str] = Field(default_factory=list)
-
-    # ------ Priorities & free text ------
-    topPriorities: list[str] = Field(default_factory=list)
-    mustHaveExperiences: str = ""
-    additionalNotes: str = ""
 
 
 # ---------------------------------------------------------------------------
@@ -127,21 +65,7 @@ async def create_itinerary(request: CreateItineraryRequest):
     # ------------------------------------------------------------------
     # 1. Derive destinations list
     # ------------------------------------------------------------------
-    destinations: list[str] = []
-    seen: set[str] = set()
-    for stay in request.destinationStays:
-        city = stay.city.strip()
-        if city and city not in seen:
-            destinations.append(city)
-            seen.add(city)
-    if not destinations:
-        if request.primaryDestination:
-            destinations.append(request.primaryDestination)
-            seen.add(request.primaryDestination)
-        for d in request.additionalDestinations:
-            if d not in seen:
-                destinations.append(d)
-                seen.add(d)
+    destinations = destinations_for_sensei(request)
     if not destinations:
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
@@ -222,6 +146,7 @@ async def create_itinerary(request: CreateItineraryRequest):
         "primaryDestination": request.primaryDestination,
         "importantDestinations": request.importantDestinations,
         "destinationStays": destination_stays_dicts,
+        "interestDestinations": request.interestDestinations,
         "openToRecommendations": request.openToRecommendations,
         "additionalDestinations": request.additionalDestinations,
         "travelerTypes": request.travelerTypes,
@@ -242,6 +167,8 @@ async def create_itinerary(request: CreateItineraryRequest):
         "topPriorities": request.topPriorities,
         "mustHaveExperiences": request.mustHaveExperiences,
         "additionalNotes": request.additionalNotes,
+        "flightDetails": request.flightDetails,
+        "preferredSuppliers": [p.model_dump() for p in request.preferredSuppliers],
     }
     # Strip None / empty so jsonb stays lean
     intake_data = {k: v for k, v in intake_data.items() if v is not None and v != "" and v != []}

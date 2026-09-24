@@ -37,7 +37,12 @@ def _load_operators() -> list[dict[str, Any]]:
     configured. Falls back to mock data if Supabase is unreachable or
     not configured, so the service never goes down over this.
     """
-    use_live = os.getenv("SUPABASE_URL") and os.getenv("SUPABASE_ANON_KEY")
+    use_live = (
+        os.getenv("SUPABASE_URL")
+        and os.getenv("SUPABASE_ANON_KEY")
+        and (os.getenv("USE_MOCK_TOURS") or "").strip().lower() not in {"1", "true", "yes"}
+        and "mock.supabase.local" not in (os.getenv("SUPABASE_URL") or "").lower()
+    )
 
     if use_live:
         try:

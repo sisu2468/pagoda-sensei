@@ -105,6 +105,19 @@ Accepts a `TravelIntakeForm` JSON body (advisor info, lead traveler name, group 
 
 ---
 
+### `POST /sensei/recommend`
+
+**Itinerary builder (read-only).** Intake → day calendar → travel-day bands → 2–4 published tours per stay day.
+
+- Overnight stays plus `interestDestinations` (Nara is kept when the client sleeps in Kyoto)
+- Far hops (Tokyo → Hokkaido → Okinawa) are not full-tour days
+- Published tours with no guide allocated are eligible (`guide.status: to_be_appointed`)
+- **Does not write jobs.** Advisor confirms tour + day in the marketplace, then `POST /api/jobs`
+
+**Processing time:** typically under 2 seconds (no model call for geography).
+
+---
+
 ### `POST /match-tours`
 
 **Tour-first day-by-day matching.** For each day of a trip, recommends 2–3 specific tours from the live Supabase inventory that best fit that day's city and the client's stated preferences.

@@ -27,6 +27,7 @@ from app.models.schemas import (
 )
 from app.routes.itinerary_async_route import router as itinerary_async_router
 from app.routes.itinerary_route import router as itinerary_router
+from app.routes.sensei_recommend_route import router as sensei_recommend_router
 from app.routes.tour_match_route import router as tour_match_router
 from app.services.matching_engine import MatchingEngine
 from app.services.webhook_parser import parse_jotform_payload
@@ -85,6 +86,7 @@ app = FastAPI(
 app.include_router(tour_match_router)
 app.include_router(itinerary_router)
 app.include_router(itinerary_async_router)
+app.include_router(sensei_recommend_router)
 
 app.add_middleware(
     CORSMiddleware,
@@ -296,4 +298,5 @@ async def root():
         "version": "1.0.0",
         "docs": "/docs",
         "health": "/health",
+        "sensei_recommend": "/sensei/recommend",
     }
