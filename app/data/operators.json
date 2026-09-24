@@ -1,0 +1,697 @@
+[
+  {
+    "id": "OP001",
+    "name": "Sakura Routes Japan",
+    "destinations": ["Tokyo", "Kyoto", "Osaka", "Hiroshima", "Nara", "Hakone", "Nikko"],
+    "countries": ["Japan"],
+    "tour_types": ["cultural", "luxury", "family", "food", "nature"],
+    "specialties": [
+      "Traditional ryokan stays",
+      "Onsen circuit tours",
+      "Kaiseki dining experiences",
+      "Bullet train itineraries",
+      "Cherry blossom season tours",
+      "Private tea ceremony bookings"
+    ],
+    "price_range": { "min": 3500, "max": 18000 },
+    "group_size_range": { "min": 1, "max": 16 },
+    "languages": ["English", "Japanese", "Mandarin"],
+    "highlights": [
+      "Exclusive access to UNESCO heritage sites after hours",
+      "Local guide network in all major cities",
+      "Helicopter experiences over Mount Fuji",
+      "Nishiki Market private food tours"
+    ],
+    "sample_tours": [
+      {
+        "name": "Classic Japan 10 Days",
+        "duration_days": 10,
+        "destinations": ["Tokyo", "Hakone", "Kyoto", "Osaka"],
+        "price_per_person": 4800,
+        "highlights": ["Mt Fuji views", "Fushimi Inari sunrise", "Dotonbori food night"]
+      },
+      {
+        "name": "Luxury Ryokan Circuit",
+        "duration_days": 8,
+        "destinations": ["Kyoto", "Hakone", "Kanazawa"],
+        "price_per_person": 9500,
+        "highlights": ["5-star ryokan stays", "Private onsen", "Maiko dinner show"]
+      },
+      {
+        "name": "Japan Family Adventure",
+        "duration_days": 12,
+        "destinations": ["Tokyo", "Nikko", "Kyoto", "Osaka", "Nara"],
+        "price_per_person": 5200,
+        "highlights": ["DisneySea day", "Deer park Nara", "Shinkansen experience"]
+      }
+    ]
+  },
+  {
+    "id": "OP002",
+    "name": "Indochina Horizons",
+    "destinations": ["Hanoi", "Ha Long Bay", "Hoi An", "Ho Chi Minh City", "Siem Reap", "Luang Prabang", "Bangkok", "Chiang Mai"],
+    "countries": ["Vietnam", "Cambodia", "Laos", "Thailand"],
+    "tour_types": ["cultural", "adventure", "budget", "food", "nature"],
+    "specialties": [
+      "Mekong River cruises",
+      "Angkor Wat private sunrise access",
+      "Street food immersion tours",
+      "Trekking hill tribe villages",
+      "Motorbike countryside tours"
+    ],
+    "price_range": { "min": 1200, "max": 7500 },
+    "group_size_range": { "min": 2, "max": 20 },
+    "languages": ["English", "French", "Vietnamese"],
+    "highlights": [
+      "Boutique Ha Long Bay junk boat overnight",
+      "Private Angkor Wat archaeologist guide",
+      "Cooking classes with local families",
+      "Elephant sanctuary ethical experiences"
+    ],
+    "sample_tours": [
+      {
+        "name": "Vietnam North to South",
+        "duration_days": 14,
+        "destinations": ["Hanoi", "Ha Long Bay", "Hue", "Hoi An", "Ho Chi Minh City"],
+        "price_per_person": 2800,
+        "highlights": ["Ha Long overnight cruise", "Imperial citadel", "Mekong Delta day trip"]
+      },
+      {
+        "name": "Angkor & Mekong Explorer",
+        "duration_days": 10,
+        "destinations": ["Siem Reap", "Phnom Penh", "Ho Chi Minh City"],
+        "price_per_person": 2200,
+        "highlights": ["3-day Angkor pass", "Killing Fields memorial", "Cu Chi tunnels"]
+      },
+      {
+        "name": "Thailand Highlights",
+        "duration_days": 8,
+        "destinations": ["Bangkok", "Chiang Mai", "Krabi"],
+        "price_per_person": 1800,
+        "highlights": ["Grand Palace", "Doi Suthep temple", "Island hopping longtail boat"]
+      }
+    ]
+  },
+  {
+    "id": "OP003",
+    "name": "Andean Pathways",
+    "destinations": ["Lima", "Cusco", "Machu Picchu", "Sacred Valley", "Lake Titicaca", "Colca Canyon", "Bogota", "Cartagena", "Medellin"],
+    "countries": ["Peru", "Colombia", "Bolivia"],
+    "tour_types": ["adventure", "cultural", "trekking", "nature"],
+    "specialties": [
+      "Inca Trail permits and logistics",
+      "High-altitude acclimatization programs",
+      "Amazon jungle lodge stays",
+      "Colombian coffee region tours",
+      "Salt flat photography expeditions"
+    ],
+    "price_range": { "min": 2000, "max": 12000 },
+    "group_size_range": { "min": 2, "max": 14 },
+    "languages": ["English", "Spanish"],
+    "highlights": [
+      "Inca Trail 4-day classic trek",
+      "Private Machu Picchu sunrise entry",
+      "Floating islands of Uros homestay",
+      "Cartagena city walls private tour"
+    ],
+    "sample_tours": [
+      {
+        "name": "Peru Highlights 12 Days",
+        "duration_days": 12,
+        "destinations": ["Lima", "Sacred Valley", "Machu Picchu", "Cusco", "Lake Titicaca"],
+        "price_per_person": 3600,
+        "highlights": ["Inca Trail trek", "Sun Gate sunrise", "Uros island homestay"]
+      },
+      {
+        "name": "Colombia Gold Route",
+        "duration_days": 9,
+        "destinations": ["Bogota", "Medellin", "Cartagena"],
+        "price_per_person": 2400,
+        "highlights": ["Gold Museum Bogota", "Pablo Escobar tour Medellin", "Playa Blanca beaches"]
+      },
+      {
+        "name": "South America Adventure Loop",
+        "duration_days": 18,
+        "destinations": ["Lima", "Cusco", "La Paz", "Salar de Uyuni", "Cartagena"],
+        "price_per_person": 5800,
+        "highlights": ["Inca Trail", "Death Road cycling", "Salt flat stargazing"]
+      }
+    ]
+  },
+  {
+    "id": "OP004",
+    "name": "Safari Legends Africa",
+    "destinations": ["Nairobi", "Masai Mara", "Serengeti", "Ngorongoro", "Zanzibar", "Cape Town", "Victoria Falls", "Okavango Delta"],
+    "countries": ["Kenya", "Tanzania", "South Africa", "Zimbabwe", "Botswana"],
+    "tour_types": ["safari", "luxury", "wildlife", "adventure"],
+    "specialties": [
+      "Big Five game drives",
+      "Great Migration timing expertise",
+      "Hot air balloon safaris",
+      "Luxury tented camp bookings",
+      "Cape Winelands private tours",
+      "Gorilla trekking Rwanda/Uganda"
+    ],
+    "price_range": { "min": 4500, "max": 35000 },
+    "group_size_range": { "min": 2, "max": 12 },
+    "languages": ["English", "Swahili"],
+    "highlights": [
+      "Exclusive conservancy access beyond national park boundaries",
+      "Bush dinner under the stars",
+      "Maasai village authentic cultural exchange",
+      "Private charter flights between camps"
+    ],
+    "sample_tours": [
+      {
+        "name": "East Africa Classic Safari",
+        "duration_days": 10,
+        "destinations": ["Nairobi", "Masai Mara", "Serengeti", "Ngorongoro", "Zanzibar"],
+        "price_per_person": 7800,
+        "highlights": ["Great Migration game drives", "Crater floor drive", "Zanzibar beach extension"]
+      },
+      {
+        "name": "Southern Africa Luxury Circuit",
+        "duration_days": 12,
+        "destinations": ["Cape Town", "Kruger", "Victoria Falls", "Okavango Delta"],
+        "price_per_person": 14500,
+        "highlights": ["Table Mountain cable car", "Mokoro canoe delta", "Victoria Falls helicopter"]
+      },
+      {
+        "name": "Kenya Family Safari",
+        "duration_days": 8,
+        "destinations": ["Nairobi", "Amboseli", "Masai Mara"],
+        "price_per_person": 5200,
+        "highlights": ["Giraffe Center Nairobi", "Kilimanjaro views", "Bush breakfast game drive"]
+      }
+    ]
+  },
+  {
+    "id": "OP005",
+    "name": "Mediterranean Mosaic",
+    "destinations": ["Rome", "Florence", "Amalfi Coast", "Athens", "Santorini", "Dubrovnik", "Barcelona", "Lisbon", "Porto"],
+    "countries": ["Italy", "Greece", "Croatia", "Spain", "Portugal"],
+    "tour_types": ["cultural", "luxury", "food", "history", "honeymoon"],
+    "specialties": [
+      "Vatican private after-hours tours",
+      "Cooking classes with Michelin chefs",
+      "Yacht charters Greek islands",
+      "Wine estate tours Tuscany",
+      "Flamenco private performances"
+    ],
+    "price_range": { "min": 3000, "max": 22000 },
+    "group_size_range": { "min": 2, "max": 18 },
+    "languages": ["English", "Italian", "Spanish", "Greek"],
+    "highlights": [
+      "Skip-the-line Colosseum underground access",
+      "Private truffle hunting Umbria",
+      "Santorini caldera sunset sailing",
+      "Game of Thrones filming locations Dubrovnik"
+    ],
+    "sample_tours": [
+      {
+        "name": "Italy Grand Tour",
+        "duration_days": 14,
+        "destinations": ["Rome", "Florence", "Cinque Terre", "Amalfi Coast", "Sicily"],
+        "price_per_person": 6500,
+        "highlights": ["Vatican after hours", "Uffizi Gallery priority", "Positano limoncello tour"]
+      },
+      {
+        "name": "Greek Islands Luxury Yacht",
+        "duration_days": 10,
+        "destinations": ["Athens", "Mykonos", "Santorini", "Crete", "Rhodes"],
+        "price_per_person": 12000,
+        "highlights": ["Private yacht charter", "Acropolis sunset private", "Volcanic hot springs"]
+      },
+      {
+        "name": "Iberian Peninsula Explorer",
+        "duration_days": 11,
+        "destinations": ["Lisbon", "Porto", "Seville", "Granada", "Barcelona"],
+        "price_per_person": 4200,
+        "highlights": ["Sintra palaces", "Port wine cave tasting", "Alhambra private dawn"]
+      }
+    ]
+  },
+  {
+    "id": "OP006",
+    "name": "Desert Rose Arabia",
+    "destinations": ["Dubai", "Abu Dhabi", "Muscat", "Petra", "Wadi Rum", "Dead Sea", "Jerusalem", "Cairo", "Luxor"],
+    "countries": ["UAE", "Oman", "Jordan", "Israel", "Egypt"],
+    "tour_types": ["luxury", "cultural", "adventure", "history"],
+    "specialties": [
+      "Wadi Rum Bedouin desert camps",
+      "Petra by night torchlight tours",
+      "Egyptian Egyptologist-guided pyramids",
+      "Dubai helicopter and superyacht",
+      "Omani wadis and falconry"
+    ],
+    "price_range": { "min": 2500, "max": 28000 },
+    "group_size_range": { "min": 1, "max": 20 },
+    "languages": ["English", "Arabic", "Hebrew"],
+    "highlights": [
+      "Exclusive Pyramids sunrise access with Egyptologist",
+      "Petra Treasury private night ceremony",
+      "Wadi Rum 2-night luxury Martian camp",
+      "Burj Khalifa At The Top Sky experience"
+    ],
+    "sample_tours": [
+      {
+        "name": "Jordan Desert & Wonders",
+        "duration_days": 8,
+        "destinations": ["Amman", "Petra", "Wadi Rum", "Dead Sea", "Aqaba"],
+        "price_per_person": 3200,
+        "highlights": ["Petra by Night", "Wadi Rum stargazing", "Dead Sea float experience"]
+      },
+      {
+        "name": "Egypt Pharaohs & Nile",
+        "duration_days": 10,
+        "destinations": ["Cairo", "Luxor", "Aswan", "Abu Simbel", "Alexandria"],
+        "price_per_person": 3800,
+        "highlights": ["Pyramids sunrise private", "Nile felucca cruise", "Valley of the Kings"]
+      },
+      {
+        "name": "UAE Luxury Escape",
+        "duration_days": 6,
+        "destinations": ["Dubai", "Abu Dhabi"],
+        "price_per_person": 5500,
+        "highlights": ["Burj Khalifa private dinner", "Desert glamping", "Ferrari World Abu Dhabi"]
+      }
+    ]
+  },
+  {
+    "id": "OP007",
+    "name": "Bali & Islands Collective",
+    "destinations": ["Bali", "Lombok", "Komodo", "Raja Ampat", "Gili Islands", "Flores"],
+    "countries": ["Indonesia"],
+    "tour_types": ["wellness", "adventure", "nature", "diving", "honeymoon"],
+    "specialties": [
+      "Surfing and yoga retreats Canggu",
+      "Komodo dragon liveaboard diving",
+      "Rice terrace trekking Ubud",
+      "Raja Ampat world-class diving",
+      "Private villa and spa packages"
+    ],
+    "price_range": { "min": 1500, "max": 9000 },
+    "group_size_range": { "min": 1, "max": 12 },
+    "languages": ["English", "Indonesian", "Balinese"],
+    "highlights": [
+      "Sunrise Mount Batur volcano hike",
+      "Private Komodo island charter boat",
+      "Tegallalang rice terrace sunrise",
+      "Traditional Balinese purification ceremony"
+    ],
+    "sample_tours": [
+      {
+        "name": "Bali Wellness & Culture",
+        "duration_days": 10,
+        "destinations": ["Ubud", "Seminyak", "Uluwatu", "Nusa Penida"],
+        "price_per_person": 2200,
+        "highlights": ["Temple blessing ceremony", "Tegallalang sunrise", "Manta ray snorkeling"]
+      },
+      {
+        "name": "Komodo & Flores Liveaboard",
+        "duration_days": 8,
+        "destinations": ["Bali", "Flores", "Komodo", "Gili Islands"],
+        "price_per_person": 3600,
+        "highlights": ["Komodo dragons", "Pink beach snorkel", "Riung 17 Islands"]
+      },
+      {
+        "name": "Raja Ampat Dive Expedition",
+        "duration_days": 12,
+        "destinations": ["Raja Ampat", "Sorong"],
+        "price_per_person": 5800,
+        "highlights": ["Biodiversity world record dive sites", "Manta ridge dive", "Remote island camping"]
+      }
+    ]
+  },
+  {
+    "id": "OP008",
+    "name": "Patagonia & Southern Cone",
+    "destinations": ["Buenos Aires", "Patagonia", "Torres del Paine", "Ushuaia", "Easter Island", "Santiago", "Atacama Desert"],
+    "countries": ["Argentina", "Chile"],
+    "tour_types": ["adventure", "trekking", "nature", "luxury"],
+    "specialties": [
+      "Torres del Paine W-trek full logistics",
+      "Perito Moreno glacier hike",
+      "Atacama stargazing expeditions",
+      "Antarctica gateway expeditions Ushuaia",
+      "Easter Island moai archaeology tours"
+    ],
+    "price_range": { "min": 3000, "max": 16000 },
+    "group_size_range": { "min": 2, "max": 10 },
+    "languages": ["English", "Spanish"],
+    "highlights": [
+      "Torres del Paine Base Camp private guide",
+      "Patagonia ice trekking Perito Moreno",
+      "Atacama salt flat night sky photography",
+      "Buenos Aires tango show and dinner"
+    ],
+    "sample_tours": [
+      {
+        "name": "Patagonia Trekking Adventure",
+        "duration_days": 14,
+        "destinations": ["Buenos Aires", "El Calafate", "Torres del Paine", "Ushuaia"],
+        "price_per_person": 6200,
+        "highlights": ["Perito Moreno glacier trek", "Torres del Paine W-trek", "End of the World train"]
+      },
+      {
+        "name": "Chile Desert to Ice",
+        "duration_days": 12,
+        "destinations": ["Santiago", "Atacama", "Torres del Paine", "Puerto Natales"],
+        "price_per_person": 5800,
+        "highlights": ["Valle de la Luna sunset", "Altiplano flamingos", "Paine Grande base"]
+      },
+      {
+        "name": "Easter Island & Santiago",
+        "duration_days": 8,
+        "destinations": ["Santiago", "Easter Island", "Valparaiso"],
+        "price_per_person": 4200,
+        "highlights": ["Ahu Tongariki moai sunrise", "Rano Raraku quarry", "Valparaiso street art"]
+      }
+    ]
+  },
+  {
+    "id": "OP009",
+    "name": "India Unbound",
+    "destinations": ["Delhi", "Agra", "Jaipur", "Varanasi", "Mumbai", "Kerala", "Rajasthan", "Goa", "Hampi"],
+    "countries": ["India"],
+    "tour_types": ["cultural", "spiritual", "luxury", "food", "wildlife"],
+    "specialties": [
+      "Golden Triangle luxury train journeys",
+      "Kerala houseboat backwaters",
+      "Varanasi Ganga Aarti private viewing",
+      "Rajasthan palace hotel circuit",
+      "Tiger safari Ranthambore/Bandhavgarh",
+      "Yoga and Ayurveda retreats"
+    ],
+    "price_range": { "min": 1800, "max": 14000 },
+    "group_size_range": { "min": 1, "max": 22 },
+    "languages": ["English", "Hindi", "Tamil", "Malayalam"],
+    "highlights": [
+      "Taj Mahal private sunrise entry",
+      "Maharaja Express luxury train",
+      "Meherangarh Fort private sunrise",
+      "Village cooking class with local family Rajasthan"
+    ],
+    "sample_tours": [
+      {
+        "name": "Golden Triangle Classic",
+        "duration_days": 8,
+        "destinations": ["Delhi", "Agra", "Jaipur"],
+        "price_per_person": 2200,
+        "highlights": ["Taj Mahal sunrise", "Amber Fort elephant ride", "Hawa Mahal views"]
+      },
+      {
+        "name": "Royal Rajasthan by Rail",
+        "duration_days": 14,
+        "destinations": ["Delhi", "Jaipur", "Jodhpur", "Udaipur", "Jaisalmer", "Agra"],
+        "price_per_person": 6800,
+        "highlights": ["Palace hotel stays", "Camel safari desert", "Lake Pichola sunset cruise"]
+      },
+      {
+        "name": "Kerala Backwaters & Spice",
+        "duration_days": 9,
+        "destinations": ["Kochi", "Munnar", "Thekkady", "Alleppey", "Kovalam"],
+        "price_per_person": 2400,
+        "highlights": ["Houseboat overnight Alleppey", "Tea estate walk Munnar", "Kathakali performance"]
+      }
+    ]
+  },
+  {
+    "id": "OP010",
+    "name": "Moroccan Dreams",
+    "destinations": ["Marrakech", "Fes", "Chefchaouen", "Merzouga Sahara", "Atlas Mountains", "Essaouira", "Casablanca"],
+    "countries": ["Morocco"],
+    "tour_types": ["cultural", "adventure", "food", "photography", "luxury"],
+    "specialties": [
+      "Sahara camel trek and desert camp",
+      "Fes medina private guide",
+      "Atlas Mountains Berber village trek",
+      "Riad boutique hotel curations",
+      "Moroccan cooking class with local family"
+    ],
+    "price_range": { "min": 1200, "max": 8000 },
+    "group_size_range": { "min": 2, "max": 16 },
+    "languages": ["English", "French", "Arabic", "Berber"],
+    "highlights": [
+      "Merzouga Sahara 2-night luxury desert camp",
+      "Fes tannery private rooftop viewing",
+      "Chefchaouen blue alleyways sunrise photography",
+      "Private hammam and spa experience Marrakech"
+    ],
+    "sample_tours": [
+      {
+        "name": "Imperial Cities Circuit",
+        "duration_days": 10,
+        "destinations": ["Casablanca", "Fes", "Chefchaouen", "Marrakech"],
+        "price_per_person": 2100,
+        "highlights": ["Hassan II Mosque", "Fes ancient medina", "Djemaa el-Fna food tour"]
+      },
+      {
+        "name": "Sahara & Atlas Adventure",
+        "duration_days": 9,
+        "destinations": ["Marrakech", "Atlas Mountains", "Merzouga", "Draa Valley"],
+        "price_per_person": 2600,
+        "highlights": ["Berber village homestay", "Sahara camel trek", "Stargazing desert camp"]
+      },
+      {
+        "name": "Morocco Luxury Riad Tour",
+        "duration_days": 8,
+        "destinations": ["Marrakech", "Fes", "Chefchaouen", "Essaouira"],
+        "price_per_person": 4200,
+        "highlights": ["5-star riad stays", "Private souk shopping guide", "Atlantic coast seafood"]
+      }
+    ]
+  },
+  {
+    "id": "OP011",
+    "name": "Nordic Wilderness Expeditions",
+    "destinations": ["Reykjavik", "Northern Iceland", "Lofoten", "Tromsø", "Stockholm", "Helsinki", "Lapland"],
+    "countries": ["Iceland", "Norway", "Sweden", "Finland"],
+    "tour_types": ["adventure", "nature", "photography", "winter", "luxury"],
+    "specialties": [
+      "Northern Lights chase expeditions",
+      "Iceland Ring Road self-drive logistics",
+      "Dog sledding and reindeer experiences Lapland",
+      "Midnight sun photography tours",
+      "Fjord kayaking Norway",
+      "Ice hotel stays Scandinavia"
+    ],
+    "price_range": { "min": 3500, "max": 18000 },
+    "group_size_range": { "min": 2, "max": 12 },
+    "languages": ["English", "Swedish", "Norwegian", "Finnish"],
+    "highlights": [
+      "Northern Lights private photography guide",
+      "Blue Lagoon private lagoon access Iceland",
+      "Husky safari Lapland with expert musher",
+      "Trolltunga / Preikestolen private hiking guide"
+    ],
+    "sample_tours": [
+      {
+        "name": "Iceland Northern Lights Ring Road",
+        "duration_days": 8,
+        "destinations": ["Reykjavik", "Golden Circle", "South Coast", "North Iceland"],
+        "price_per_person": 4800,
+        "highlights": ["Geysir and Gullfoss", "Jökulsárlón glacier lagoon", "Northern Lights hunt"]
+      },
+      {
+        "name": "Norway Fjords & Arctic",
+        "duration_days": 10,
+        "destinations": ["Oslo", "Bergen", "Flåm", "Tromsø", "Lofoten"],
+        "price_per_person": 6200,
+        "highlights": ["Sognefjord cruise", "Flåm railway", "Whale watching Tromsø"]
+      },
+      {
+        "name": "Finnish Lapland Winter",
+        "duration_days": 7,
+        "destinations": ["Helsinki", "Rovaniemi", "Saariselkä"],
+        "price_per_person": 5400,
+        "highlights": ["Santa's village Rovaniemi", "Glass igloo Northern Lights", "Ice fishing"]
+      }
+    ]
+  },
+  {
+    "id": "OP012",
+    "name": "East Asia Cultural Bridges",
+    "destinations": ["Seoul", "Busan", "Jeju Island", "Beijing", "Xi'an", "Shanghai", "Taipei", "Hong Kong"],
+    "countries": ["South Korea", "China", "Taiwan"],
+    "tour_types": ["cultural", "food", "history", "adventure", "shopping"],
+    "specialties": [
+      "Korean DMZ and palace tours",
+      "Great Wall of China private sections",
+      "Xi'an Terracotta Warriors private access",
+      "Taiwan night market food tours",
+      "K-culture and entertainment district access"
+    ],
+    "price_range": { "min": 2200, "max": 11000 },
+    "group_size_range": { "min": 2, "max": 20 },
+    "languages": ["English", "Korean", "Mandarin", "Cantonese"],
+    "highlights": [
+      "Great Wall Jinshanling private sunrise section",
+      "DMZ Joint Security Area guided tour",
+      "Dumpling making class Shanghai with local chef",
+      "Jiufen old street and Shifen lantern release"
+    ],
+    "sample_tours": [
+      {
+        "name": "South Korea Highlights",
+        "duration_days": 9,
+        "destinations": ["Seoul", "DMZ", "Gyeongju", "Busan", "Jeju Island"],
+        "price_per_person": 3200,
+        "highlights": ["Gyeongbokgung Palace hanbok", "DMZ tunnels tour", "Haedong Yonggungsa temple"]
+      },
+      {
+        "name": "China Ancient & Modern",
+        "duration_days": 12,
+        "destinations": ["Beijing", "Xi'an", "Zhangjiajie", "Shanghai"],
+        "price_per_person": 4600,
+        "highlights": ["Forbidden City private guide", "Terracotta Warriors", "Avatar Mountains"]
+      },
+      {
+        "name": "Taiwan Island Explorer",
+        "duration_days": 8,
+        "destinations": ["Taipei", "Jiufen", "Taroko Gorge", "Sun Moon Lake", "Tainan"],
+        "price_per_person": 2600,
+        "highlights": ["Taroko Gorge marble canyon", "Sun Moon Lake cycling", "Tainan temple circuit"]
+      }
+    ]
+  },
+  {
+    "id": "OP013",
+    "name": "West Africa Roots & Culture",
+    "destinations": ["Lagos", "Accra", "Cape Coast", "Kumasi", "Dakar", "Benin City", "Abuja", "Mombasa"],
+    "countries": ["Nigeria", "Ghana", "Senegal"],
+    "tour_types": ["cultural", "heritage", "nature", "music", "food"],
+    "specialties": [
+      "African diaspora roots heritage tours",
+      "Cape Coast slave castle guided history",
+      "Afrobeats and nightlife Lagos",
+      "Kente weaving and craft villages",
+      "Goree Island Dakar heritage"
+    ],
+    "price_range": { "min": 1500, "max": 7000 },
+    "group_size_range": { "min": 2, "max": 25 },
+    "languages": ["English", "French", "Yoruba", "Twi", "Wolof"],
+    "highlights": [
+      "Elmina and Cape Coast Castle private historian",
+      "Osun-Osogbo Sacred Grove UNESCO site",
+      "Dakar Goree Island ferry and House of Slaves",
+      "Kumasi Kejetia market and Ashanti palace"
+    ],
+    "sample_tours": [
+      {
+        "name": "Ghana Heritage Trail",
+        "duration_days": 9,
+        "destinations": ["Accra", "Cape Coast", "Kumasi", "Volta Region"],
+        "price_per_person": 2200,
+        "highlights": ["Cape Coast Castle", "Kakum canopy walk", "Kente village Bonwire"]
+      },
+      {
+        "name": "Nigeria Roots & Culture",
+        "duration_days": 8,
+        "destinations": ["Lagos", "Benin City", "Osogbo", "Abuja"],
+        "price_per_person": 2400,
+        "highlights": ["Ife Museum of Art", "Osun Sacred Grove", "Zuma Rock Abuja"]
+      },
+      {
+        "name": "Senegal & The Gambia",
+        "duration_days": 7,
+        "destinations": ["Dakar", "Goree Island", "Saly", "Banjul"],
+        "price_per_person": 1800,
+        "highlights": ["House of Slaves Goree", "Djoudj Bird Sanctuary", "Gambia River cruise"]
+      }
+    ]
+  },
+  {
+    "id": "OP014",
+    "name": "Central America Rainforest Routes",
+    "destinations": ["San Jose", "Arenal", "Manuel Antonio", "Monteverde", "Belize City", "Tikal", "Cartagena", "Panama City", "Bocas del Toro"],
+    "countries": ["Costa Rica", "Belize", "Guatemala", "Panama"],
+    "tour_types": ["adventure", "nature", "wildlife", "eco", "diving"],
+    "specialties": [
+      "Costa Rica wildlife and biodiversity",
+      "Mayan ruins Guatemala guides",
+      "Belize barrier reef diving",
+      "Volcano hiking and hot springs",
+      "Rainforest canopy zipline circuits"
+    ],
+    "price_range": { "min": 1800, "max": 9500 },
+    "group_size_range": { "min": 2, "max": 14 },
+    "languages": ["English", "Spanish"],
+    "highlights": [
+      "Arenal volcano night glow hike",
+      "Tikal sunrise private Mayan guide",
+      "Belize Blue Hole dive trip",
+      "Manuel Antonio sloth and monkey watching with naturalist"
+    ],
+    "sample_tours": [
+      {
+        "name": "Costa Rica Eco Adventure",
+        "duration_days": 10,
+        "destinations": ["San Jose", "Arenal", "Monteverde", "Manuel Antonio", "Osa Peninsula"],
+        "price_per_person": 3200,
+        "highlights": ["Arenal lava fields night hike", "Cloud forest suspension bridges", "Scarlet macaws Osa"]
+      },
+      {
+        "name": "Ancient Maya Circuit",
+        "duration_days": 11,
+        "destinations": ["Guatemala City", "Tikal", "Antigua", "Belize City", "San Ignacio"],
+        "price_per_person": 2900,
+        "highlights": ["Tikal sunrise Temple IV", "Lake Atitlan volcano kayak", "Xunantunich ruins Belize"]
+      },
+      {
+        "name": "Panama & Bocas Adventure",
+        "duration_days": 8,
+        "destinations": ["Panama City", "Bocas del Toro", "San Blas Islands"],
+        "price_per_person": 2600,
+        "highlights": ["Panama Canal transit experience", "Bocas reef snorkeling", "San Blas Kuna village stay"]
+      }
+    ]
+  },
+  {
+    "id": "OP015",
+    "name": "Japan Alpine & Ski Specialists",
+    "destinations": ["Tokyo", "Niseko", "Hakuba", "Furano", "Nozawa Onsen", "Kyoto", "Osaka", "Takayama"],
+    "countries": ["Japan"],
+    "tour_types": ["ski", "adventure", "cultural", "luxury", "winter"],
+    "specialties": [
+      "Hokkaido powder skiing Niseko and Furano",
+      "Hakuba Valley multi-resort ski packages",
+      "Ski-in onsen ryokan combinations",
+      "Snowcat and backcountry ski touring",
+      "Japan ski pass logistics and equipment rental",
+      "Après-ski izakaya cultural experiences"
+    ],
+    "price_range": { "min": 3200, "max": 20000 },
+    "group_size_range": { "min": 1, "max": 14 },
+    "languages": ["English", "Japanese"],
+    "highlights": [
+      "Niseko Hanazono private cat skiing powder",
+      "Nozawa Onsen village snow monkey onsen circuit",
+      "Furano lavender field ski resort combination",
+      "Takayama Shirakawa-go winter illumination snowscape"
+    ],
+    "sample_tours": [
+      {
+        "name": "Hokkaido Powder Paradise",
+        "duration_days": 10,
+        "destinations": ["Tokyo", "Sapporo", "Niseko", "Furano"],
+        "price_per_person": 6800,
+        "highlights": ["Niseko backcountry powder", "Furano ski resort", "Otaru snow canal evening"]
+      },
+      {
+        "name": "Honshu Ski & Culture",
+        "duration_days": 12,
+        "destinations": ["Tokyo", "Hakuba", "Nozawa Onsen", "Takayama", "Kyoto"],
+        "price_per_person": 7200,
+        "highlights": ["Hakuba multi-resort pass", "Snow monkey park Jigokudani", "Shirakawa-go farmhouse"]
+      },
+      {
+        "name": "Japan Ski Express Family",
+        "duration_days": 9,
+        "destinations": ["Tokyo", "Madarao", "Nozawa Onsen", "Shiga Kogen"],
+        "price_per_person": 5400,
+        "highlights": ["Kid-friendly gentle slopes Madarao", "Snow play programs", "Zenko-ji temple Nagano"]
+      }
+    ]
+  }
+]
