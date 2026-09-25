@@ -2,13 +2,14 @@
   {
     "tour_id": "101",
     "tour_name": "Tsukiji Outer Market Food Walk",
-    "description": "Family-friendly food tour through Tokyo's outer market.",
+    "description": "Family-friendly food tour through Tokyo's outer market. Vegetarian options available.",
     "location": "Tokyo",
     "country": "Japan",
     "duration_minutes": 180,
     "duration_display": "3 hours",
     "operator": { "id": "op-tokyo-1", "name": "Tokyo Walks", "email": null },
     "guide": { "id": null, "name": null, "status": "to_be_appointed" },
+    "guides": [],
     "price": 18000,
     "price_display": "¥18,000 per adult",
     "tour_type": "food"
@@ -22,7 +23,26 @@
     "duration_minutes": 480,
     "duration_display": "8 hours",
     "operator": { "id": "op-tokyo-1", "name": "Tokyo Walks", "email": null },
-    "guide": { "id": "g-tokyo-1", "name": "Yuki Tanaka", "status": "appointed" },
+    "guide": {
+      "id": "g-tokyo-1",
+      "name": "Yuki Tanaka",
+      "status": "appointed",
+      "city": "Tokyo",
+      "specialties": ["culture", "walking"],
+      "availability_display": "See guide calendar for availability",
+      "introduced_by_agency_id": "fora"
+    },
+    "guides": [
+      {
+        "id": "g-tokyo-1",
+        "name": "Yuki Tanaka",
+        "status": "appointed",
+        "city": "Tokyo",
+        "specialties": ["culture", "walking"],
+        "availability_display": "See guide calendar for availability",
+        "introduced_by_agency_id": "fora"
+      }
+    ],
     "price": 42000,
     "price_display": "¥42,000 per adult",
     "tour_type": "culture"
@@ -37,9 +57,43 @@
     "duration_display": "1 hour",
     "operator": { "id": "op-tokyo-1", "name": "Tokyo Walks", "email": null },
     "guide": { "id": null, "name": null, "status": "to_be_appointed" },
+    "guides": [],
     "price": 12000,
     "price_display": "¥12,000 per adult",
     "tour_type": "transfer"
+  },
+  {
+    "tour_id": "104",
+    "tour_name": "Yanaka Quiet Neighbourhood Morning",
+    "description": "Short Tokyo neighbourhood walk with Yuki Tanaka. Easy pace, few stairs.",
+    "location": "Tokyo",
+    "country": "Japan",
+    "duration_minutes": 150,
+    "duration_display": "2.5 hours",
+    "operator": { "id": "op-tokyo-1", "name": "Tokyo Walks", "email": null },
+    "guide": {
+      "id": "g-tokyo-1",
+      "name": "Yuki Tanaka",
+      "status": "appointed",
+      "city": "Tokyo",
+      "specialties": ["culture"],
+      "availability_display": "See guide calendar for availability",
+      "introduced_by_agency_id": "fora"
+    },
+    "guides": [
+      {
+        "id": "g-tokyo-1",
+        "name": "Yuki Tanaka",
+        "status": "appointed",
+        "city": "Tokyo",
+        "specialties": ["culture"],
+        "availability_display": "See guide calendar for availability",
+        "introduced_by_agency_id": "fora"
+      }
+    ],
+    "price": 16000,
+    "price_display": "¥16,000 per adult",
+    "tour_type": "culture"
   },
   {
     "tour_id": "201",
@@ -51,6 +105,7 @@
     "duration_display": "3.5 hours",
     "operator": { "id": "op-kyoto-1", "name": "Kyoto Heritage", "email": null },
     "guide": { "id": null, "name": null, "status": "to_be_appointed" },
+    "guides": [],
     "price": 28000,
     "price_display": "¥28,000 per adult",
     "tour_type": "culture"
@@ -64,7 +119,24 @@
     "duration_minutes": 420,
     "duration_display": "7 hours",
     "operator": { "id": "op-kyoto-1", "name": "Kyoto Heritage", "email": null },
-    "guide": { "id": "g-kyoto-1", "name": "Aiko Mori", "status": "appointed" },
+    "guide": {
+      "id": "g-kyoto-1",
+      "name": "Aiko Mori",
+      "status": "appointed",
+      "city": "Kyoto",
+      "specialties": ["nature"],
+      "availability_display": "Availability on request"
+    },
+    "guides": [
+      {
+        "id": "g-kyoto-1",
+        "name": "Aiko Mori",
+        "status": "appointed",
+        "city": "Kyoto",
+        "specialties": ["nature"],
+        "availability_display": "Availability on request"
+      }
+    ],
     "price": 38000,
     "price_display": "¥38,000 per adult",
     "tour_type": "nature"
@@ -79,6 +151,7 @@
     "duration_display": "5 hours",
     "operator": { "id": "op-nara-1", "name": "Nara Guides", "email": null },
     "guide": { "id": null, "name": null, "status": "to_be_appointed" },
+    "guides": [],
     "price": 22000,
     "price_display": "¥22,000 per adult",
     "tour_type": "culture"
@@ -86,13 +159,14 @@
   {
     "tour_id": "401",
     "tour_name": "Osaka Street Food Evening",
-    "description": "Family-friendly Dotonbori and Kuromon food walk.",
+    "description": "Family-friendly Dotonbori and Kuromon food walk. Vegetarian options.",
     "location": "Osaka",
     "country": "Japan",
     "duration_minutes": 180,
     "duration_display": "3 hours",
     "operator": { "id": "op-osaka-1", "name": "Osaka Eats", "email": null },
     "guide": { "id": null, "name": null, "status": "to_be_appointed" },
+    "guides": [],
     "price": 16000,
     "price_display": "¥16,000 per adult",
     "tour_type": "food"
@@ -106,7 +180,24 @@
     "duration_minutes": 240,
     "duration_display": "4 hours",
     "operator": { "id": "op-sapporo-1", "name": "Hokkaido Walks", "email": null },
-    "guide": { "id": "g-sapporo-1", "name": "Ken Sato", "status": "appointed" },
+    "guide": {
+      "id": "g-sapporo-1",
+      "name": "Ken Sato",
+      "status": "appointed",
+      "city": "Sapporo",
+      "specialties": ["food"],
+      "availability_display": "Availability on request"
+    },
+    "guides": [
+      {
+        "id": "g-sapporo-1",
+        "name": "Ken Sato",
+        "status": "appointed",
+        "city": "Sapporo",
+        "specialties": ["food"],
+        "availability_display": "Availability on request"
+      }
+    ],
     "price": 20000,
     "price_display": "¥20,000 per adult",
     "tour_type": "food"
@@ -121,6 +212,7 @@
     "duration_display": "8 hours",
     "operator": { "id": "op-sapporo-1", "name": "Hokkaido Walks", "email": null },
     "guide": { "id": null, "name": null, "status": "to_be_appointed" },
+    "guides": [],
     "price": 45000,
     "price_display": "¥45,000 per adult",
     "tour_type": "nature"
@@ -135,6 +227,7 @@
     "duration_display": "3 hours",
     "operator": { "id": "op-naha-1", "name": "Okinawa Local", "email": null },
     "guide": { "id": null, "name": null, "status": "to_be_appointed" },
+    "guides": [],
     "price": 15000,
     "price_display": "¥15,000 per adult",
     "tour_type": "culture"

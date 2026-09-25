@@ -117,6 +117,9 @@ def _build_intake_dict(request: CreateItineraryRequest) -> dict[str, Any]:
         "mustHaveExperiences": request.mustHaveExperiences,
         "additionalNotes": request.additionalNotes,
         "flightDetails": request.flightDetails,
+        "dietaryNotes": request.dietaryNotes,
+        "mobilityNotes": request.mobilityNotes,
+        "buildMode": request.buildMode,
         "preferredSuppliers": [
             p.model_dump() for p in request.preferredSuppliers
         ],

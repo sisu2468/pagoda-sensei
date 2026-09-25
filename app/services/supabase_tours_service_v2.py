@@ -28,9 +28,18 @@ from typing import Any
 
 from supabase import Client, create_client
 
+from app.services.inventory_rules import is_airport_transfer, tour_matches_guide
+
 logger = logging.getLogger(__name__)
 
 MOCK_TOURS_PATH = Path(__file__).resolve().parent.parent / "data" / "mock_tours.json"
+
+_TRANSPORT_ACTIVITY_TYPES = {
+    "Shinkansen Tickets (bullet train)",
+    "Pagoda Support",
+    "Airport transfers - Custom",
+    "Transfers",
+}
 
 
 def use_mock_tours() -> bool:
@@ -39,30 +48,49 @@ def use_mock_tours() -> bool:
     return flag in {"1", "true", "yes"} or "mock.supabase.local" in url
 
 
-def fetch_mock_tours(destinations: list[str] | None = None) -> list[dict[str, Any]]:
+def _normalize_mock_tour(tour: dict[str, Any]) -> dict[str, Any]:
+    """Ensure mock rows have guides[] and never expose a net rate."""
+    row = dict(tour)
+    guides = row.get("guides")
+    if not isinstance(guides, list) or not guides:
+        guide = row.get("guide") or {}
+        row["guides"] = [guide] if guide else []
+    return row
+
+
+def fetch_mock_tours(
+    destinations: list[str] | None = None,
+    guide_id: str | None = None,
+    guide_name: str | None = None,
+) -> list[dict[str, Any]]:
     """Local published-tour inventory. No network. Guide assignment optional."""
     if not MOCK_TOURS_PATH.exists():
         raise FileNotFoundError(f"Mock tour file not found at {MOCK_TOURS_PATH}")
     with MOCK_TOURS_PATH.open("r", encoding="utf-8") as fh:
         tours: list[dict[str, Any]] = json.load(fh)
 
-    if not destinations:
-        logger.info("Loaded %d MOCK published tours (unfiltered)", len(tours))
-        return tours
-
-    tokens = [d.strip().casefold() for d in destinations if d.strip()]
-    matched: list[dict[str, Any]] = []
-    for tour in tours:
-        loc = (tour.get("location") or "").casefold()
-        country = (tour.get("country") or "").casefold()
-        if any(token in loc or token in country or loc in token for token in tokens):
-            matched.append(tour)
+    published: list[dict[str, Any]] = []
+    for raw in tours:
+        tour = _normalize_mock_tour(raw)
+        if is_airport_transfer(tour):
+            continue
+        if (guide_id or guide_name) and not tour_matches_guide(
+            tour, guide_id=guide_id, guide_name=guide_name
+        ):
+            continue
+        if destinations:
+            tokens = [d.strip().casefold() for d in destinations if d.strip()]
+            loc = (tour.get("location") or "").casefold()
+            country = (tour.get("country") or "").casefold()
+            if not any(token in loc or token in country or loc in token for token in tokens):
+                continue
+        published.append(tour)
 
     logger.info(
-        "Loaded %d MOCK published tours for destinations=%s",
-        len(matched), destinations,
+        "Loaded %d MOCK published tours (destinations=%s guide=%s)",
+        len(published), destinations, guide_id or guide_name,
     )
-    return matched
+    return published
 
 
 @lru_cache(maxsize=1)
@@ -121,26 +149,26 @@ def _format_price(price_per_adult: Any) -> tuple[float | None, str]:
         return None, "Contact operator for pricing"
 
 
-def fetch_live_tours(destinations: list[str] | None = None) -> list[dict[str, Any]]:
+def fetch_live_tours(
+    destinations: list[str] | None = None,
+    guide_id: str | None = None,
+    guide_name: str | None = None,
+) -> list[dict[str, Any]]:
     """
     Fetch published tours. Published is the only eligibility gate.
 
     Guide assignment is a label ("appointed" vs "to be appointed"), never a filter.
     If a destination has zero published tours, return none for that city —
     do not fall back to another region's catalogue.
+    Airport-transfer / Transferz catalogue rows are excluded.
     """
     if use_mock_tours():
-        return fetch_mock_tours(destinations)
+        return fetch_mock_tours(
+            destinations, guide_id=guide_id, guide_name=guide_name
+        )
 
     MAX_TOURS = 60
     client = get_supabase_client()
-
-    _TRANSPORT_ACTIVITY_TYPES = {
-        "Shinkansen Tickets (bullet train)",
-        "Pagoda Support",
-        "Airport transfers - Custom",
-        "Transfers",
-    }
 
     query = (
         client.table("tour")
@@ -160,6 +188,34 @@ def fetch_live_tours(destinations: list[str] | None = None) -> list[dict[str, An
             or_conditions.append(f"country.ilike.%{dest_clean}%")
         if or_conditions:
             query = query.or_(",".join(or_conditions))
+
+    filter_guide_id = guide_id
+    filter_guide_name = guide_name
+    name_matched_ids: list[str] = []
+    if filter_guide_name and not filter_guide_id:
+        token = filter_guide_name.strip().replace(",", "").replace("%", "")
+        if token:
+            users_by_name = (
+                client.table("users")
+                .select("id, first_name, last_name")
+                .or_(f"first_name.ilike.%{token}%,last_name.ilike.%{token}%")
+                .execute()
+            )
+            name_matched_ids = [r["id"] for r in (users_by_name.data or []) if r.get("id")]
+
+    lookup_guide_ids = [filter_guide_id] if filter_guide_id else name_matched_ids
+    if lookup_guide_ids:
+        guide_assignments = (
+            client.table("guide_tour_assignments")
+            .select("tour_id, guide_id")
+            .in_("guide_id", lookup_guide_ids)
+            .execute()
+        )
+        extra_tour_ids = [
+            r["tour_id"] for r in (guide_assignments.data or []) if r.get("tour_id")
+        ]
+        if extra_tour_ids and not destinations:
+            query = query.in_("id", extra_tour_ids)
 
     tours_response = query.execute()
     tour_rows = tours_response.data or []
@@ -194,7 +250,7 @@ def fetch_live_tours(destinations: list[str] | None = None) -> list[dict[str, An
 
     tour_ids = [row["id"] for row in tour_rows if row.get("id")]
 
-    assignment_by_tour: dict[int, dict] = {}
+    assignments_by_tour: dict[Any, list[dict]] = {}
     if tour_ids:
         assignments_response = (
             client.table("guide_tour_assignments")
@@ -203,10 +259,9 @@ def fetch_live_tours(destinations: list[str] | None = None) -> list[dict[str, An
             .execute()
         )
         for row in assignments_response.data or []:
-            if row["tour_id"] not in assignment_by_tour:
-                assignment_by_tour[row["tour_id"]] = row
+            assignments_by_tour.setdefault(row["tour_id"], []).append(row)
 
-    unassigned = [r["id"] for r in tour_rows if r.get("id") not in assignment_by_tour]
+    unassigned = [r["id"] for r in tour_rows if r.get("id") not in assignments_by_tour]
     if unassigned:
         logger.info(
             "Keeping %d published tour(s) with no guide allocated: %s",
@@ -214,9 +269,19 @@ def fetch_live_tours(destinations: list[str] | None = None) -> list[dict[str, An
         )
 
     owner_ids = [r.get("user_id") for r in tour_rows if r.get("user_id")]
-    guide_ids = [a["guide_id"] for a in assignment_by_tour.values() if a.get("guide_id")]
-    operator_ids = [a["operator_id"] for a in assignment_by_tour.values() if a.get("operator_id")]
-    person_ids = list({*owner_ids, *guide_ids, *operator_ids})
+    assigned_guide_ids = [
+        a["guide_id"]
+        for rows in assignments_by_tour.values()
+        for a in rows
+        if a.get("guide_id")
+    ]
+    operator_ids = [
+        a["operator_id"]
+        for rows in assignments_by_tour.values()
+        for a in rows
+        if a.get("operator_id")
+    ]
+    person_ids = list({*owner_ids, *assigned_guide_ids, *operator_ids})
 
     user_by_id: dict[str, dict] = {}
     if person_ids:
@@ -230,12 +295,11 @@ def fetch_live_tours(destinations: list[str] | None = None) -> list[dict[str, An
             user_by_id[row["id"]] = row
 
     profile_by_user_id: dict[str, dict] = {}
-    if guide_ids:
+    if assigned_guide_ids:
         profiles_response = (
             client.table("profiles")
-            .select("user_id, specialties, daily_rate_amount, daily_rate_currency, "
-                     "guide_availability_calendar, city")
-            .in_("user_id", list(set(guide_ids)))
+            .select("user_id, specialties, guide_availability_calendar, city")
+            .in_("user_id", list(set(assigned_guide_ids)))
             .execute()
         )
         for row in profiles_response.data or []:
@@ -246,35 +310,56 @@ def fetch_live_tours(destinations: list[str] | None = None) -> list[dict[str, An
         last = user.get("last_name", "")
         return f"{first} {last}".strip()
 
+    def _guide_record(assigned_guide_id: Any) -> dict[str, Any]:
+        guide_user = user_by_id.get(assigned_guide_id, {}) if assigned_guide_id else {}
+        profile = profile_by_user_id.get(assigned_guide_id, {}) if assigned_guide_id else {}
+        availability_calendar = profile.get("guide_availability_calendar")
+        if not assigned_guide_id:
+            availability_display = "Guide to be appointed"
+        elif not availability_calendar:
+            availability_display = "Availability on request"
+        else:
+            availability_display = "See guide calendar for availability"
+        return {
+            "id": assigned_guide_id,
+            "name": _display_name(guide_user) or None,
+            "status": "appointed" if assigned_guide_id else "to_be_appointed",
+            "city": profile.get("city"),
+            "specialties": profile.get("specialties"),
+            "availability_display": availability_display,
+            "introduced_by_agency_id": profile.get("introduced_by_agency_id")
+            or profile.get("host_agency_id"),
+        }
+
     tours: list[dict[str, Any]] = []
     for row in tour_rows:
-        tour_id = row.get("id")
-        assignment = assignment_by_tour.get(tour_id, {})
-        owner_id = row.get("user_id") or assignment.get("operator_id")
-        guide_id = assignment.get("guide_id")
+        row_id = row.get("id")
+        assignments = assignments_by_tour.get(row_id, [])
+        owner_id = row.get("user_id") or (assignments[0].get("operator_id") if assignments else None)
         owner = user_by_id.get(owner_id, {}) if owner_id else {}
-        guide_user = user_by_id.get(guide_id, {}) if guide_id else {}
-        profile = profile_by_user_id.get(guide_id, {}) if guide_id else {}
 
-        operator_name = _display_name(owner) or "Pagoda Travel"
-        guide_name = _display_name(guide_user) or None
-        guide_status = "appointed" if guide_id else "to_be_appointed"
+        guides = [
+            _guide_record(a.get("guide_id"))
+            for a in assignments
+            if a.get("guide_id")
+        ]
+        primary = guides[0] if guides else {
+            "id": None,
+            "name": None,
+            "status": "to_be_appointed",
+            "city": None,
+            "specialties": None,
+            "availability_display": "Guide to be appointed",
+            "introduced_by_agency_id": None,
+        }
 
         duration_minutes, duration_display = _format_duration(
             row.get("start_time"), row.get("end_time")
         )
         price, price_display = _format_price(row.get("price_per_adult"))
 
-        availability_calendar = profile.get("guide_availability_calendar")
-        if guide_status == "to_be_appointed":
-            availability_display = "Guide to be appointed"
-        elif not availability_calendar:
-            availability_display = "Availability on request"
-        else:
-            availability_display = "See guide calendar for availability"
-
-        tours.append({
-            "tour_id": str(tour_id),
+        formatted = {
+            "tour_id": str(row_id),
             "tour_name": row.get("name", "Unnamed Tour"),
             "description": (row.get("description") or "")[:300],
             "location": row.get("location", "Japan") or "Japan",
@@ -283,23 +368,27 @@ def fetch_live_tours(destinations: list[str] | None = None) -> list[dict[str, An
             "duration_display": duration_display,
             "operator": {
                 "id": owner_id,
-                "name": operator_name,
+                "name": _display_name(owner) or "Pagoda Travel",
                 "email": owner.get("email"),
             },
-            "guide": {
-                "id": guide_id,
-                "name": guide_name,
-                "status": guide_status,
-            },
+            "guide": primary,
+            "guides": guides,
             "price": price,
             "price_display": price_display,
             "availability": None,
-            "availability_display": availability_display,
+            "availability_display": primary.get("availability_display"),
             "tour_type": row.get("activity_type", "other"),
-        })
+        }
+        if is_airport_transfer(formatted):
+            continue
+        if (filter_guide_id or filter_guide_name) and not tour_matches_guide(
+            formatted, guide_id=filter_guide_id, guide_name=filter_guide_name
+        ):
+            continue
+        tours.append(formatted)
 
     logger.info(
         "Fetched %d published tours (%d with guide assignments, destinations=%s)",
-        len(tours), len(assignment_by_tour), destinations,
+        len(tours), len(assignments_by_tour), destinations,
     )
     return tours

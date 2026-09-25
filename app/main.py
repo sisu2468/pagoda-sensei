@@ -299,4 +299,5 @@ async def root():
         "docs": "/docs",
         "health": "/health",
         "sensei_recommend": "/sensei/recommend",
+        "sensei_guide_tours": "/sensei/guide-tours",
     }

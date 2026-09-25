@@ -84,6 +84,18 @@ class SenseiIntake(BaseModel):
         None,
         description="Free-text flight notes only. Never auto-create Transferz.",
     )
+    dietaryNotes: str | None = Field(
+        None,
+        description="Dietary needs. Used to rank food tours, never to invent a menu.",
+    )
+    mobilityNotes: str | None = Field(
+        None,
+        description="Mobility / walking limits. Used to downrank long walking days.",
+    )
+    buildMode: str | None = Field(
+        None,
+        description="self | pagoda_build. Sensei assists; it does not replace Pagoda-build.",
+    )
     preferredSuppliers: list[PreferredSupplier] = Field(default_factory=list)
 
     @field_validator("arrival_date", "departure_date")

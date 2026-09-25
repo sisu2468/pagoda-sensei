@@ -168,6 +168,9 @@ async def create_itinerary(request: CreateItineraryRequest):
         "mustHaveExperiences": request.mustHaveExperiences,
         "additionalNotes": request.additionalNotes,
         "flightDetails": request.flightDetails,
+        "dietaryNotes": request.dietaryNotes,
+        "mobilityNotes": request.mobilityNotes,
+        "buildMode": request.buildMode,
         "preferredSuppliers": [p.model_dump() for p in request.preferredSuppliers],
     }
     # Strip None / empty so jsonb stays lean

@@ -107,14 +107,23 @@ Accepts a `TravelIntakeForm` JSON body (advisor info, lead traveler name, group 
 
 ### `POST /sensei/recommend`
 
-**Itinerary builder (read-only).** Intake → day calendar → travel-day bands → 2–4 published tours per stay day.
+**Itinerary builder (read-only).** Intake → day calendar → travel-day bands → published tours per stay day.
 
 - Overnight stays plus `interestDestinations` (Nara is kept when the client sleeps in Kyoto)
+- Hotel names from intake are copied onto each day (not invented)
 - Far hops (Tokyo → Hokkaido → Okinawa) are not full-tour days
 - Published tours with no guide allocated are eligible (`guide.status: to_be_appointed`)
+- Assigned guides are bundled on the tour card (`guide` + `guides[]`)
+- Search-by-guide-name (`query` or `guide_name`) returns that guide’s tours — still tours
+- Airport-transfer / Transferz products are excluded. Flight notes never create a transfer
+- Host-agency exclusivity: `host_agency_id` hides another agency’s introduced guides; the published tour stays
 - **Does not write jobs.** Advisor confirms tour + day in the marketplace, then `POST /api/jobs`
 
 **Processing time:** typically under 2 seconds (no model call for geography).
+
+### `GET /sensei/guide-tours`
+
+Second entry: `guide_name` or `guide_id`. Returns that guide’s published tours. Not a guide-only list.
 
 ---
 

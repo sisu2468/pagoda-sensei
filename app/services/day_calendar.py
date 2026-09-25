@@ -18,6 +18,12 @@ from app.services.travel_days import (
 
 
 @dataclass
+class OvernightSlot:
+    city: str
+    hotel_name: str | None = None
+
+
+@dataclass
 class CalendarDay:
     day: int
     date: str
@@ -28,6 +34,7 @@ class CalendarDay:
     max_tour_minutes: int
     day_trip_cities: list[str] = field(default_factory=list)
     pace_warning: str | None = None
+    hotel_name: str | None = None
 
     def to_dict(self) -> dict:
         return {
@@ -35,6 +42,7 @@ class CalendarDay:
             "date": self.date,
             "overnight_city": self.overnight_city,
             "next_overnight_city": self.next_overnight_city,
+            "hotel_name": self.hotel_name,
             "band": self.band.name,
             "day_kind": self.day_kind,
             "max_tour_minutes": self.max_tour_minutes,
@@ -43,9 +51,9 @@ class CalendarDay:
         }
 
 
-def _overnight_sequence(intake: SenseiIntake) -> list[str]:
-    """One city per calendar day from destinationStays nights."""
-    sequence: list[str] = []
+def _overnight_sequence(intake: SenseiIntake) -> list[OvernightSlot]:
+    """One overnight slot per calendar day from destinationStays nights."""
+    sequence: list[OvernightSlot] = []
     for stay in intake.destinationStays:
         city = stay.city.strip()
         if not city:
@@ -56,7 +64,8 @@ def _overnight_sequence(intake: SenseiIntake) -> list[str]:
                 f"Overnight stay for {city!r} needs nights >= 1. "
                 "Fix the intake form; Sensei will not invent a night count."
             )
-        sequence.extend([city] * nights)
+        hotel = (stay.hotelName or "").strip() or None
+        sequence.extend([OvernightSlot(city, hotel)] * nights)
     return sequence
 
 
@@ -93,8 +102,9 @@ def build_day_calendar(intake: SenseiIntake) -> list[CalendarDay]:
     interest = [c.strip() for c in intake.interestDestinations if c.strip()]
 
     days: list[CalendarDay] = []
-    for i, city in enumerate(sequence):
-        next_city = sequence[i + 1] if i + 1 < len(sequence) else None
+    for i, slot in enumerate(sequence):
+        city = slot.city
+        next_city = sequence[i + 1].city if i + 1 < len(sequence) else None
         if next_city:
             band = band_for_hop(city, next_city)
         else:
@@ -118,6 +128,7 @@ def build_day_calendar(intake: SenseiIntake) -> list[CalendarDay]:
                 day_kind=band.day_kind,
                 max_tour_minutes=band.max_tour_minutes,
                 day_trip_cities=day_trips,
+                hotel_name=slot.hotel_name,
             )
         )
 
