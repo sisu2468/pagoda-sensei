@@ -380,7 +380,13 @@ def create_itinerary_with_jobs(
     logistics_notes: list[str] = []
 
     prefs_lower = [p.lower() for p in (transportation_preferences or [])]
-    want_airport = any("airport" in p for p in prefs_lower)
+    # Airport transfers are Transferz-only. Never insert library airport-transfer tours.
+    want_airport = False
+    if any("airport" in p for p in prefs_lower):
+        logistics_notes.append(
+            "Airport transfers are the Transferz menu item — not a Tour Library product. "
+            "Sensei did not add an airport transfer."
+        )
     want_bullet  = any("bullet" in p or "shinkansen" in p or "train" in p for p in prefs_lower)
 
     if (want_airport or want_bullet) and destination_stays:

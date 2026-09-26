@@ -14,9 +14,10 @@ from app.models.intake import SenseiIntake, destinations_for_sensei
 from app.services.day_calendar import CalendarDay, build_day_calendar
 from app.services.inventory_rules import (
     find_guide_in_inventory,
-    is_airport_transfer,
+    is_excluded_catalogue,
     primary_guide,
     public_guide_fields,
+    tour_in_city,
     tour_matches_guide,
     visible_guides,
 )
@@ -57,11 +58,7 @@ def _blob(tour: dict[str, Any]) -> str:
 
 
 def _city_match(tour: dict[str, Any], city: str) -> bool:
-    loc = (tour.get("location") or "").casefold()
-    token = city.strip().casefold()
-    if not token:
-        return False
-    return token in loc or loc in token
+    return tour_in_city(tour, city)
 
 
 def _duration_ok(tour: dict[str, Any], max_minutes: int, day_kind: str) -> bool:
@@ -320,7 +317,7 @@ def _eligible_tours(
     for tour in tours:
         if str(tour.get("tour_id")) in exclude:
             continue
-        if is_airport_transfer(tour):
+        if is_excluded_catalogue(tour):
             continue
         if guide_id or guide_name:
             if not tour_matches_guide(tour, guide_id=guide_id, guide_name=guide_name):
@@ -333,6 +330,36 @@ def _eligible_tours(
                 continue
         eligible.append(tour)
     return eligible
+
+
+def _stay_cities(intake: SenseiIntake) -> set[str]:
+    return {
+        stay.city.strip().casefold()
+        for stay in intake.destinationStays
+        if stay.city.strip()
+    }
+
+
+def _belongs_to_day(
+    tour: dict[str, Any],
+    day: CalendarDay,
+    stay_cities: set[str],
+) -> bool:
+    """
+    Tour must be in today's overnight city or an explicit day-trip city (Nara).
+    A later overnight (Osaka while sleeping in Kyoto) is not a Kyoto day trip.
+    """
+    allowed = [day.overnight_city, *day.day_trip_cities]
+    if not any(_city_match(tour, city) for city in allowed):
+        return False
+    for stay in stay_cities:
+        if stay == day.overnight_city.casefold():
+            continue
+        if any(stay == trip.strip().casefold() for trip in day.day_trip_cities):
+            continue
+        if _city_match(tour, stay):
+            return False
+    return True
 
 
 def recommend_from_inventory(
@@ -363,6 +390,7 @@ def recommend_from_inventory(
         host_agency_id=host_agency_id if guide_search else None,
     )
 
+    stay_cities = _stay_cities(intake)
     pace_warning = next((d.pace_warning for d in calendar if d.pace_warning), None)
     days_out: list[dict[str, Any]] = []
 
@@ -370,11 +398,10 @@ def recommend_from_inventory(
         if only_day is not None and day.day != only_day:
             continue
 
-        pool_cities = [day.overnight_city, *day.day_trip_cities]
         city_tours = [
             tour
             for tour in inventory
-            if any(_city_match(tour, city) for city in pool_cities)
+            if _belongs_to_day(tour, day, stay_cities)
         ]
 
         eligible: list[dict[str, Any]] = []

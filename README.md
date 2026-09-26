@@ -73,6 +73,12 @@ Edit `.env` and fill in the required values:
 uvicorn app.main:app --reload --port 8000
 ```
 
+Windows helper (mock inventory, port 8000):
+
+```powershell
+powershell -File scripts\start-sensei.ps1
+```
+
 Interactive API docs are available at `http://localhost:8000/docs` once the server is running.
 
 ---

@@ -10,7 +10,7 @@ from pydantic import ValidationError
 
 from app.models.intake import SenseiIntake, SenseiIntakeError, destinations_for_sensei
 from app.services.day_calendar import build_day_calendar
-from app.services.inventory_rules import is_airport_transfer
+from app.services.inventory_rules import is_airport_transfer, is_excluded_catalogue
 from app.services.sensei_recommend import recommend_from_inventory, tours_for_guide
 from app.services.travel_days import band_for_hop, cluster_for_city
 
@@ -107,6 +107,7 @@ def test_kyoto_osaka_calendar_stay_days():
     assert [d.overnight_city for d in days] == ["Kyoto", "Kyoto", "Kyoto", "Osaka", "Osaka"]
     assert days[0].day_kind == "stay"
     assert "Nara" in days[0].day_trip_cities
+    assert "Osaka" not in days[0].day_trip_cities
     assert days[2].day_kind == "stay"  # Kyoto → Osaka is local Kansai
 
 
@@ -308,6 +309,66 @@ def test_mock_inventory_drops_airport_transfers():
     assert "103" not in ids
     assert "101" in ids
     assert "102" in ids
+
+
+def test_osaka_tours_do_not_appear_on_kyoto_stay_days():
+    intake = SenseiIntake(
+        arrival_date="2026-11-01",
+        departure_date="2026-11-05",
+        destinationStays=[
+            {"city": "Kyoto", "nights": 3},
+            {"city": "Osaka", "nights": 2},
+        ],
+        interestDestinations=["Nara", "Osaka"],
+    )
+    tours = [
+        _tour(201, "Kyoto Gion Culture Morning", "Kyoto", 210),
+        _tour(301, "Nara Park and Todai-ji", "Nara", 300),
+        _tour(401, "Osaka Street Food Evening", "Osaka", 180),
+        _tour(999, "Japan Highlights", "Japan", 240),
+        _tour(998, "Kansai Sampler", "Kansai", 240),
+        _tour(103, "Haneda Hotel Pickup", "Tokyo", 60, tour_type="Airport transfers - Custom"),
+        _tour(
+            700,
+            "Ryokan stay package",
+            "Kyoto",
+            480,
+            tour_type="Special Accommodations",
+        ),
+    ]
+    result = recommend_from_inventory(intake, tours)
+    kyoto_ids = {
+        t["tour_id"]
+        for d in result["days"]
+        if d["overnight_city"] == "Kyoto"
+        for t in d["suggested_tours"]
+    }
+    osaka_ids = {
+        t["tour_id"]
+        for d in result["days"]
+        if d["overnight_city"] == "Osaka"
+        for t in d["suggested_tours"]
+    }
+    assert "201" in kyoto_ids
+    assert "301" in kyoto_ids
+    assert "401" not in kyoto_ids
+    assert "999" not in kyoto_ids
+    assert "998" not in kyoto_ids
+    assert "103" not in kyoto_ids
+    assert "700" not in kyoto_ids
+    assert "401" in osaka_ids
+    assert "201" not in osaka_ids
+    assert "700" not in osaka_ids
+
+
+def test_special_accommodations_and_transfers_are_excluded():
+    assert is_excluded_catalogue(
+        _tour(1, "Ryokan package", "Kyoto", 480, tour_type="Special Accommodations")
+    )
+    assert is_excluded_catalogue(
+        _tour(2, "Airport transfers - Custom", "Tokyo", 60, tour_type="Transfers")
+    )
+    assert not is_excluded_catalogue(_tour(3, "Gion Morning", "Kyoto", 210))
 
 
 def test_tours_for_guide_second_entry():

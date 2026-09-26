@@ -100,6 +100,9 @@ def build_day_calendar(intake: SenseiIntake) -> list[CalendarDay]:
 
     start = date.fromisoformat(intake.arrival_date)
     interest = [c.strip() for c in intake.interestDestinations if c.strip()]
+    overnight_keys = {
+        slot.city.strip().casefold() for slot in sequence if slot.city.strip()
+    }
 
     days: list[CalendarDay] = []
     for i, slot in enumerate(sequence):
@@ -113,7 +116,11 @@ def build_day_calendar(intake: SenseiIntake) -> list[CalendarDay]:
         day_trips: list[str] = []
         if band.day_kind == "stay":
             for extra in interest:
-                if extra.casefold() == city.casefold():
+                key = extra.casefold()
+                if key == city.casefold():
+                    continue
+                # Osaka as a later overnight is not a Kyoto day trip. Nara is.
+                if key in overnight_keys:
                     continue
                 if is_local_pair(city, extra):
                     day_trips.append(extra)

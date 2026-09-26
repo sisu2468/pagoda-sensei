@@ -7,6 +7,7 @@ They hide airport-transfer products and apply host-agency guide visibility.
 
 from __future__ import annotations
 
+import re
 from typing import Any
 
 TRANSFER_ACTIVITY_TYPES = frozenset(
@@ -17,6 +18,20 @@ TRANSFER_ACTIVITY_TYPES = frozenset(
         "airport transfers - custom",
         "airport transfer",
         "transferz",
+        "transportation",
+    }
+)
+
+_NON_TOUR_ACTIVITY_TYPES = frozenset(
+    {
+        *TRANSFER_ACTIVITY_TYPES,
+        "special accommodations",
+        "special accommodation",
+        "special accomodations",  # catalogue misspelling
+        "special accomodation",
+        "shinkansen tickets (bullet train)",
+        "shinkansen tickets",
+        "pagoda support",
     }
 )
 
@@ -28,6 +43,23 @@ _TRANSFER_NAME_MARKERS = (
     "airport drop",
     "haneda hotel pickup",
     "narita hotel pickup",
+)
+
+_GENERIC_LOCATION = frozenset(
+    {
+        "japan",
+        "nippon",
+        "asia",
+        "kansai",
+        "kanto",
+        "chubu",
+        "hokkaido",
+        "okinawa",
+        "kyushu",
+        "honshu",
+        "country",
+        "nationwide",
+    }
 )
 
 
@@ -53,7 +85,80 @@ def is_airport_transfer(tour: dict[str, Any]) -> bool:
         return True
     if "airport" in text and "transfer" in text:
         return True
+    if activity == "transfers" or activity.endswith(" transfers"):
+        return True
     return False
+
+
+def is_special_accommodation(tour: dict[str, Any]) -> bool:
+    """Hotel / special-stay catalogue rows are not tours. Never recommend them."""
+    activity = str(tour.get("tour_type") or "").strip().casefold()
+    text = " ".join(
+        [
+            str(tour.get("tour_name") or ""),
+            str(tour.get("description") or ""),
+            activity,
+        ]
+    ).casefold()
+    if activity in {
+        "special accommodations",
+        "special accommodation",
+        "special accomodations",
+        "special accomodation",
+    }:
+        return True
+    return "special accommodation" in text or "special accomodation" in text
+
+
+def is_excluded_catalogue(tour: dict[str, Any]) -> bool:
+    """
+    Not a sightseeing Tour Library product.
+
+    Airport transfers, Transferz, special accommodations, ticket SKUs,
+    and Pagoda support rows must never appear as day recommendations.
+    """
+    if is_airport_transfer(tour) or is_special_accommodation(tour):
+        return True
+    activity = str(tour.get("tour_type") or "").strip().casefold()
+    if activity in _NON_TOUR_ACTIVITY_TYPES:
+        return True
+    if "pagoda support" in activity:
+        return True
+    if "shinkansen" in activity and "ticket" in activity:
+        return True
+    return False
+
+
+def location_matches_city(location: str | None, city: str) -> bool:
+    """
+    Strict city match. Empty / 'Japan' / 'Kansai' do not match every city.
+    'Osaka' does not match a Kyoto day. Substring 'loc in city' is not used.
+    """
+    token = (city or "").strip().casefold()
+    loc = (location or "").strip().casefold()
+    if not token or not loc:
+        return False
+    if token in _GENERIC_LOCATION or loc in _GENERIC_LOCATION:
+        return False
+    parts = [
+        part.strip()
+        for part in re.split(r"[,/|&]+", loc)
+        if part.strip()
+    ]
+    if not parts:
+        parts = [loc]
+    for part in parts:
+        if part in _GENERIC_LOCATION:
+            continue
+        if token == part:
+            return True
+        if re.search(rf"\b{re.escape(token)}\b", part):
+            return True
+    return False
+
+
+def tour_in_city(tour: dict[str, Any], city: str) -> bool:
+    return location_matches_city(str(tour.get("location") or ""), city)
 
 
 def _all_guides(tour: dict[str, Any]) -> list[dict[str, Any]]:

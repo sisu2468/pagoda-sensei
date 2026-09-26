@@ -37,3 +37,7 @@ logs/
 # Tests
 .pytest_cache/
 pytest-cache-files-*/
+tests/
+
+# Docs
+docs/

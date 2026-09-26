@@ -28,7 +28,11 @@ from typing import Any
 
 from supabase import Client, create_client
 
-from app.services.inventory_rules import is_airport_transfer, tour_matches_guide
+from app.services.inventory_rules import (
+    is_excluded_catalogue,
+    location_matches_city,
+    tour_matches_guide,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -38,7 +42,13 @@ _TRANSPORT_ACTIVITY_TYPES = {
     "Shinkansen Tickets (bullet train)",
     "Pagoda Support",
     "Airport transfers - Custom",
+    "Airport transfers",
+    "Airport transfer",
     "Transfers",
+    "Transferz",
+    "Special Accommodations",
+    "Special Accommodation",
+    "Special Accomodations",
 }
 
 
@@ -72,17 +82,14 @@ def fetch_mock_tours(
     published: list[dict[str, Any]] = []
     for raw in tours:
         tour = _normalize_mock_tour(raw)
-        if is_airport_transfer(tour):
+        if is_excluded_catalogue(tour):
             continue
         if (guide_id or guide_name) and not tour_matches_guide(
             tour, guide_id=guide_id, guide_name=guide_name
         ):
             continue
         if destinations:
-            tokens = [d.strip().casefold() for d in destinations if d.strip()]
-            loc = (tour.get("location") or "").casefold()
-            country = (tour.get("country") or "").casefold()
-            if not any(token in loc or token in country or loc in token for token in tokens):
+            if not any(location_matches_city(tour.get("location"), d) for d in destinations):
                 continue
         published.append(tour)
 
@@ -185,7 +192,6 @@ def fetch_live_tours(
             if not dest_clean:
                 continue
             or_conditions.append(f"location.ilike.%{dest_clean}%")
-            or_conditions.append(f"country.ilike.%{dest_clean}%")
         if or_conditions:
             query = query.or_(",".join(or_conditions))
 
@@ -379,7 +385,7 @@ def fetch_live_tours(
             "availability_display": primary.get("availability_display"),
             "tour_type": row.get("activity_type", "other"),
         }
-        if is_airport_transfer(formatted):
+        if is_excluded_catalogue(formatted):
             continue
         if (filter_guide_id or filter_guide_name) and not tour_matches_guide(
             formatted, guide_id=filter_guide_id, guide_name=filter_guide_name
